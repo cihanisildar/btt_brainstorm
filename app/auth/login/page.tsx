@@ -39,14 +39,25 @@ export default function LoginPage() {
     }
     
     // Debug: Log the URL being used
-    console.log('Using redirect URL:', `${siteUrl}/auth/callback`);
+    const redirectUrl = `${siteUrl}/auth/callback`;
+    console.log('[Login] Current origin:', window.location.origin);
+    console.log('[Login] NEXT_PUBLIC_SITE_URL:', process.env.NEXT_PUBLIC_SITE_URL);
+    console.log('[Login] Using redirect URL:', redirectUrl);
     
-    const { error } = await supabase.auth.signInWithOAuth({
+    const { data, error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: `${siteUrl}/auth/callback`,
+        redirectTo: redirectUrl,
+        queryParams: {
+          access_type: 'offline',
+          prompt: 'consent',
+        },
       },
     });
+    
+    if (data?.url) {
+      console.log('[Login] Supabase redirect URL:', data.url);
+    }
 
     if (error) {
       console.error("Error logging in:", error);
