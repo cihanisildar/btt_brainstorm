@@ -10,19 +10,23 @@ export async function GET(request: Request) {
     const supabase = await createClient();
     const { error } = await supabase.auth.exchangeCodeForSession(code);
     if (!error) {
-      const forwardedHost = request.headers.get("x-forwarded-host"); // original origin before load balancer
-      const isLocalEnv = process.env.NODE_ENV === "development";
-      if (isLocalEnv) {
-        return NextResponse.redirect(`${origin}${next}`);
-      } else if (forwardedHost) {
-        return NextResponse.redirect(`https://${forwardedHost}${next}`);
-      } else {
-        return NextResponse.redirect(`${origin}${next}`);
-      }
+      // Get the correct redirect URL
+      const forwardedHost = request.headers.get("x-forwarded-host");
+      const forwardedProto = request.headers.get("x-forwarded-proto") || "https";
+      
+      // Use environment variable for production URL if available
+      const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 
+                      (forwardedHost ? `${forwardedProto}://${forwardedHost}` : origin);
+      
+      return NextResponse.redirect(`${siteUrl}${next}`);
     }
   }
 
   // return the user to an error page with instructions
-  return NextResponse.redirect(`${origin}/auth/auth-code-error`);
+  const forwardedHost = request.headers.get("x-forwarded-host");
+  const forwardedProto = request.headers.get("x-forwarded-proto") || "https";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 
+                  (forwardedHost ? `${forwardedProto}://${forwardedHost}` : origin);
+  return NextResponse.redirect(`${siteUrl}/auth/auth-code-error`);
 }
 

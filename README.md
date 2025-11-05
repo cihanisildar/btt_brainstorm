@@ -1,36 +1,113 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Beyin Fırtınası 🧠✨
 
-## Getting Started
+Modern, minimalist ve Japon estetiğiyle tasarlanmış bir beyin fırtınası platformu. Kullanıcılar konular oluşturup, fikirler paylaşabilir, yorum yapabilir ve beğenebilir.
 
-First, run the development server:
+## 🚀 Özellikler
+
+- ✅ Google OAuth ile giriş
+- ✅ Topic (Konu) oluşturma, düzenleme ve silme
+- ✅ Idea (Fikir) ekleme, düzenleme ve silme
+- ✅ Comment (Yorum) ekleme, düzenleme ve silme
+- ✅ Like (Beğeni) sistemi
+- ✅ Fikirleri sıralama (En yeni, En çok beğenilen, En çok yorumlanan)
+- ✅ Modern, minimalist UI/UX
+- ✅ Framer Motion ile animasyonlar
+- ✅ Type-safe kod (TypeScript)
+- ✅ Responsive tasarım
+
+## 🛠️ Teknolojiler
+
+- **Next.js 15** (Turbopack)
+- **Supabase** (Database, Authentication)
+- **TanStack Query** (Data fetching)
+- **Axios** (HTTP client)
+- **Shadcn/ui** (UI components)
+- **Framer Motion** (Animations)
+- **TypeScript** (Type safety)
+- **Tailwind CSS** (Styling)
+
+## 📋 Kurulum
+
+### 1. Repository'yi klonlayın
+
+```bash
+git clone https://github.com/cihanisildar/btt_brainstorm.git
+cd btt_brainstorm
+```
+
+### 2. Bağımlılıkları yükleyin
+
+```bash
+npm install
+```
+
+### 3. Environment Variables
+
+`.env.local` dosyası oluşturun:
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+NEXT_PUBLIC_SITE_URL=http://localhost:3000  # Development için
+# Production için: NEXT_PUBLIC_SITE_URL=https://yourdomain.com
+```
+
+### 4. Supabase Kurulumu
+
+1. **Migration'ları çalıştırın:**
+   - Supabase Dashboard > SQL Editor
+   - `supabase/migrations/001_initial_schema.sql` dosyasını çalıştırın
+   - `supabase/migrations/002_profiles_table.sql` dosyasını çalıştırın
+
+2. **Google OAuth Kurulumu:**
+   - `GOOGLE_OAUTH_SETUP.md` dosyasındaki adımları takip edin
+
+### 5. Development Server'ı Başlatın
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Uygulama [http://localhost:3000](http://localhost:3000) adresinde çalışacaktır.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 📁 Proje Yapısı
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+beyin_firtinasi/
+├── app/
+│   ├── actions/          # Server actions
+│   ├── auth/             # Authentication routes
+│   ├── topics/           # Topic pages
+│   └── page.tsx          # Homepage
+├── components/           # React components
+│   └── ui/              # Shadcn/ui components
+├── hooks/               # TanStack Query hooks
+├── lib/                 # Utilities
+│   ├── api/            # API client
+│   └── supabase/       # Supabase clients
+├── supabase/
+│   └── migrations/     # Database migrations
+└── types/              # TypeScript types
+```
 
-## Learn More
+## 🔐 Authentication
 
-To learn more about Next.js, take a look at the following resources:
+Sadece Google OAuth ile giriş yapılabilir. Supabase Dashboard'da Google provider'ı etkinleştirmeniz gerekir.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 📝 Database Schema
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- **topics**: Konular
+- **ideas**: Fikirler
+- **comments**: Yorumlar
+- **likes**: Beğeniler
+- **profiles**: Kullanıcı profilleri
 
-## Deploy on Vercel
+## 🚢 Production Deployment
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. `.env.local` dosyasında `NEXT_PUBLIC_SITE_URL` değişkenini production URL'iniz ile güncelleyin
+2. Supabase Dashboard > Settings > API > Site URL'i production URL'iniz ile güncelleyin
+3. Google Cloud Console'da Authorized redirect URIs'e production callback URL'inizi ekleyin
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 📄 Lisans
+
+Bu proje MIT lisansı altında lisanslanmıştır.
