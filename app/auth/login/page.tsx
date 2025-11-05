@@ -18,8 +18,28 @@ export default function LoginPage() {
     setIsLoading(true);
     const supabase = createClient();
     
-    // Use environment variable for production URL, fallback to current origin
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || window.location.origin;
+    // Get the correct site URL
+    // In production, always use environment variable or current origin (should be production)
+    // Never use localhost in production
+    let siteUrl = process.env.NEXT_PUBLIC_SITE_URL;
+    
+    // Remove trailing slash if present
+    if (siteUrl) {
+      siteUrl = siteUrl.replace(/\/+$/, '');
+    }
+    
+    // If no env var, use current origin but check if it's localhost
+    if (!siteUrl) {
+      const currentOrigin = window.location.origin;
+      // If we're on localhost in production (shouldn't happen), log error
+      if (currentOrigin.includes('localhost') && process.env.NODE_ENV === 'production') {
+        console.error('ERROR: Running in production but detected localhost. Set NEXT_PUBLIC_SITE_URL environment variable.');
+      }
+      siteUrl = currentOrigin;
+    }
+    
+    // Debug: Log the URL being used
+    console.log('Using redirect URL:', `${siteUrl}/auth/callback`);
     
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",

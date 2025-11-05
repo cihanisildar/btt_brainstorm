@@ -15,18 +15,28 @@ export async function GET(request: Request) {
       const forwardedProto = request.headers.get("x-forwarded-proto") || "https";
       
       // Use environment variable for production URL if available
-      const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 
-                      (forwardedHost ? `${forwardedProto}://${forwardedHost}` : origin);
+      let siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 
+                    (forwardedHost ? `${forwardedProto}://${forwardedHost}` : origin);
       
-      return NextResponse.redirect(`${siteUrl}${next}`);
+      // Remove trailing slash if present
+      siteUrl = siteUrl.replace(/\/+$/, '');
+      
+      // Ensure next starts with /
+      const redirectPath = next.startsWith('/') ? next : `/${next}`;
+      
+      return NextResponse.redirect(`${siteUrl}${redirectPath}`);
     }
   }
 
   // return the user to an error page with instructions
   const forwardedHost = request.headers.get("x-forwarded-host");
   const forwardedProto = request.headers.get("x-forwarded-proto") || "https";
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 
-                  (forwardedHost ? `${forwardedProto}://${forwardedHost}` : origin);
+  let siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 
+                (forwardedHost ? `${forwardedProto}://${forwardedHost}` : origin);
+  
+  // Remove trailing slash if present
+  siteUrl = siteUrl.replace(/\/+$/, '');
+  
   return NextResponse.redirect(`${siteUrl}/auth/auth-code-error`);
 }
 
